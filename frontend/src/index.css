@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+@import "tailwindcss";
+
+/* Theme Variables */
+@theme {
+  --color-primary: #3B8EC2;
+}
+
+/* Global Font */
+body {
+  font-family: 'Outfit', sans-serif;
+   background-color: #eef6fb;
+}
+
+/* Active Nav Underline */
+.active hr {
+  @apply block;
+}
+
+/* Mobile Active Nav Styling */
+@media (max-width: 740px) {
+  .active p {
+    @apply text-white bg-primary;
+  }
+}
+
+/* Hide Scrollbar */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom Grid Utility */
+@utility grid-cols-auto {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-hero {
+  animation: slideUpFade 0.8s ease forwards;
+}
+.btn-primary {
+  background-color: var(--color-primary);
+}
+
+.btn-primary:hover {
+  background-color: #11364d;
+}
+.gradient-main {
+  background: linear-gradient(135deg, #3B8EC2 0%, #5F6FFF 100%);
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: all 0.8s ease;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+.input-box{
+  @apply w-full mb-4 px-5 py-4 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-primary/40 bg-white;
+}
+.input-box:hover{
+  transform: scale(1.02);
+  transition: .25s;
+}
+/* ===== GLOBAL THEME BUTTON ===== */
+.btn-global{
+  background-color: var(--color-primary);
+  color: white;
+  cursor: pointer;
+  transition: all 0.28s ease;
+}
+
+.btn-global:hover{
+  background-color: #11364d;
+  transform: scale(1.08);
+}
+.gradient-text{
+  background: linear-gradient(135deg,#3B8EC2,#5F6FFF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

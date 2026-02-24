@@ -1,0 +1,9 @@
+I have three configuration files that initialize external services at startup.
+
+MongoDB.js connects to MongoDB Atlas using a connection string from .env. It's async because database connections take time. I use mongoose which provides ORM features on top of MongoDB. The connection uses a pool of TCP connections that are reused.
+
+Cloudinary.js initializes the Cloudinary image upload service. Rather than storing files locally on the server, which doesn't scale, Cloudinary provides cloud image storage with CDN delivery. I configure it with API credentials from .env.
+
+FirebaseAdmin.js initializes Firebase Admin SDK for Google OAuth. I read the serviceAccountKey.json file which contains Firebase credentials, and use it to verify Google ID tokens from users who login with their Google account. This is separate from Firebase client SDK which runs on frontend.
+
+All three are called once during server startup in server.js. Each one centralizes the configuration for that service, making it easy to change credentials by just updating .env."
