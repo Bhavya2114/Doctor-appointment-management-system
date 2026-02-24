@@ -1,0 +1,14 @@
+AdminContext - Interview Summary
+
+
+"AdminContext manages global state for admin operations using Context API. It handles token persistence via localStorage and provides async functions for API calls. While functional for MVP, it lacks loading/error states, has weak error handling, and cascades data fetches unnecessarily. For production, consolidate state with useReducer, add loading/error fields per data type, implement token validation on startup, and use AbortController for safe unmounting."
+
+
+DoctorContext - 
+
+"DoctorContext manages doctor-specific state using Context API with localStorage persistence. It handles token management, appointments, profile data, and dashboard stats. However, it has several production issues: initialization bugs (false vs {}), no loading states, cascading network fetches for single actions, no abort on unmount, and inconsistent error handling. For production, consolidate state with useReducer, implement loading/error fields per data type, use AbortController for safe cleanup, and optimize backend responses to return multiple data in single call."
+
+
+AppContext - 
+
+"AppContext provides shared configuration and utility functions across the admin dashboard. It correctly exports environment variables (currency, backendUrl) and helper functions (slotDateFormat, calculateAge) as read-only utilities. However, it has several issues: it uses context API for something that could be a simple module (architectural overkill), lacks input validation in utility functions, doesn't validate environment variables at startup, hardcodes English month names, and duplicates backendUrl export with DoctorContext. For production, consolidate configuration into a single module with startup validation, add input validation to all utility functions, support internationalization for dates and currency, and move this from context provider to a simple config singleton."

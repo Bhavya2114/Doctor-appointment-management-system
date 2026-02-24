@@ -1,0 +1,25 @@
+✅ Question 1
+👉 If AdminContextProvider updates its state, which components re-render?
+
+“When AdminContextProvider updates its state, only components that consume AdminContext will re-render. Nested providers like DoctorContextProvider will not re-render unless they also depend on AdminContext or receive new props.”
+
+
+✅ Question 2
+👉 Why didn’t we put BrowserRouter inside App.jsx?
+
+🔎 Correct Answer
+
+We put BrowserRouter at the top level (main.jsx) because:
+Routing should wrap the entire app
+All components — including providers — may need routing access
+It separates bootstrapping from application logic
+
+
+“BrowserRouter is placed at the root in main.jsx because routing is a foundational concern of the application. It ensures the entire component tree has access to routing context and keeps bootstrapping concerns separate from application logic.”
+
+
+✅ 👉 Question 3
+
+If AdminContextProvider re-renders, will <App /> re-render?
+
+“Yes, <App /> will re-render if AdminContextProvider’s state changes and the context value updates, because App consumes that context. React re-renders components that subscribe to updated context values.”

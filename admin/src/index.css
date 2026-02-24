@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import "tailwindcss";
+
+/* Global Font */
+body {
+    font-family: 'Outfit', sans-serif;
+}
+
+/* Hide Scrollbar (Cross Browser) */
+::-webkit-scrollbar {
+    display: none;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: #eef6fb;
+}
+
+
+@theme {
+  --color-primary: #3B8EC2;
+}
+.gradient-main {
+  background: linear-gradient(135deg, #3B8EC2 0%, #5F6FFF 100%);
+}
+
+.input-box{
+  @apply w-full mb-4 px-5 py-4 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-primary/40 bg-white;
+}
+
+.input-box:hover{
+  transform: scale(1.02);
+  transition: .25s;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+}
+
+.btn-primary:hover {
+  background-color: #11364d;
+}
+
+.animate-hero {
+  animation: slideUpFade 0.8s ease forwards;
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: all 0.6s ease;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
