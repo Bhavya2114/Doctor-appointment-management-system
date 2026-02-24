@@ -1,0 +1,49 @@
+"cloudinaryUpload.js is a utility function that handles image uploads to Cloudinary.
+
+It takes a file path and optional resource type, uploads to Cloudinary with credentials already configured from environment variables, organizes uploads in a 'medlink_doctors' folder, and returns the secure HTTPS URL.
+
+I extracted this to a utility instead of duplicating the logic in every controller - it's called from userController, doctorController, and adminController. This follows DRY principle.
+
+Weaknesses: It doesn't clean up the temporary file after uploading (could fill disk), doesn't have retry logic if upload fails, and doesn't validate file type before sending (should be done in multer middleware). In production, I'd add file cleanup using fs.unlink(), retry with exponential backoff, and explicit timeout handling for Cloudinary API."
+
+
+1. server.js           ← Entry point, middleware setup
+   ↓
+2. config/
+   ├── mongodb.js      ← Database connection
+   └── cloudinary.js   ← Image service setup
+   ↓
+3. models/
+   ├── userModel.js    ← Patient schema
+   ├── doctorModel.js  ← Healthcare provider schema
+   └── appointmentModel.js ← Booking records
+   ↓
+4. middleware/
+   ├── authUser.js     ← Patient JWT verification
+   ├── authAdmin.js    ← Admin hardcoded auth
+   ├── authDoctor.js   ← Provider JWT verification
+   └── multer.js       ← File upload handling
+   ↓
+5. routes/
+   ├── userRoute.js    ← Patient endpoints
+   ├── adminRoute.js   ← Admin panel endpoints
+   └── doctorRoute.js  ← Provider endpoints
+   ↓
+6. controllers/
+   ├── userController.js    ← Patient logic (12 functions)
+   ├── adminController.js   ← Admin logic (6 functions)
+   └── doctorController.js  ← Provider logic (9 functions)
+   ↓
+7. utils/
+   └── cloudinaryUpload.js  ← Image upload utility
+
+
+
+✅ Security: JWT auth, bcrypt hashing, authorization checks
+✅ Database: MongoDB schemas, relationships, snapshots
+✅ Payments: Razorpay & Stripe integration, webhooks
+✅ File Upload: Multer, Cloudinary, CloudDeploy
+✅ API Design: REST patterns, role-based access
+✅ Business Logic: Booking, cancellation, earnings
+✅ Error Handling: Try-catch, validation, edge cases
+✅ Performance: Pagination, indexing, aggregation

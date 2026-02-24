@@ -1,0 +1,69 @@
+User Controller
+
+Interview Questions: bookAppointment
+Q1: Walk Me Through Entire Booking Flow
+"User clicks book appointment. Explain step by step what happens."
+
+Expected answer:
+
+Frontend sends: userId, docId, slotDate, slotTime
+Fetch doctor from DB
+Check doctor available
+Check if slot already booked
+If free, add to slots_booked array
+Fetch user data
+Create appointment record (with snapshots)
+Update doctor's slots_booked in DB
+Return success
+
+
+WHAT YOU SHOULD SAY IN INTERVIEW (2-3 Minutes)
+"userController has 12 functions handling authentication, profile, bookings, and payments.
+
+Authentication uses JWT tokens and bcrypt password hashing. Registration validates email format and password strength, then hashes password before saving. Login compares entered password with hash using bcrypt, which is one-way so even if database is leaked, passwords are safe. I also support Google OAuth using Firebase to verify tokens.
+
+Appointments include booking, cancelling, and listing. Booking is complex - I fetch the doctor, check if they're available, verify the slot isn't already booked, create an appointment record with snapshots of user and doctor data, then update the doctor's slots_booked array. This keeps historical accuracy if doctor deletes account.
+
+Weaknesses I'm aware of: There's a potential race condition when two users book the same slot simultaneously. And I should add transactions so if appointment saves but slot update fails, the state remains consistent.
+
+If asked about specific function: I can walk through book appointment in detail - it's probably the most complex, handling doctor availability checks, slot management, authorization, snapshots, and database updates."
+
+
+Doctor Controller
+
+"doctorController has 9 functions for doctor panel operations.
+
+loginDoctor is standard email/password authentication using bcrypt comparison, similar to user login.
+
+appointmentsDoctor fetches appointments for the logged-in doctor. The docId comes from authDoctor middleware, so doctors can only see their own appointments - authorization is built-in.
+
+appointmentCancel and appointmentComplete are actions doctors take on appointments. I check that the appointment belongs to the doctor before allowing the operation - they can't modify other doctors' appointments.
+
+doctorList is a public endpoint (no auth) that patients use to browse available doctors. I exclude sensitive fields like password and email.
+
+changeAvailability toggles whether doctor is online or offline. Both doctor and admin can use this endpoint.
+
+updateDoctorProfile is the complex one - doctor can update fees, address, about, upload a new image to Cloudinary, and importantly, set custom working hours. The frontend slot generation uses these hours to determine available appointment times.
+
+doctorDashboard shows analytics: total earnings, appointment count, unique patient count, and recent appointments. Earnings count appointments that are either completed or paid, so doctors get paid whether they mark it done or patient pays online.
+
+Weaknesses: No pagination on appointment lists (if doctor has 100K appointments it loads everything), the unique patient count loop is O(n²) inefficient, dashboard reverses the entire list instead of just fetching latest 10."
+
+
+
+Admin Controller
+
+
+"adminController has 6 functions for admin panel operations.
+
+loginAdmin uses hardcoded email and password from environment variables. It's simple since there's only one admin account. However, it puts credentials in the JWT payload which isn't ideal - should just store role.
+
+addDoctor is similar to user registration - validates inputs, hashes password, uploads image to Cloudinary, then saves to database. Admin is the only one who can create doctors.
+
+appointmentsAdmin fetches all appointments in the system. Admin can see appointments from all users and doctors. There's also appointmentCancel which lets admin cancel any appointment (unlike users who can only cancel their own).
+
+allDoctors lists all doctors for the admin panel to manage them.
+
+adminDashboard shows statistics - total doctors, total appointments, total patients. It currently loads all documents which is inefficient at scale - should use aggregation instead.
+
+Weaknesses: No pagination (when system has 100K appointments, the list endpoint loads everything), no filtering or sorting, appointment cancellation doesn't release the doctor's slot back, missing revenue calculations in dashboard, and hardcoded admin credentials instead of database."

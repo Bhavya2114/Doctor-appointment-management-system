@@ -1,0 +1,38 @@
+1) What is an Endpoint?
+
+An endpoint is a specific URL + HTTP method where the client can access backend functionality.
+
+👉 It is the place where a request hits your server.
+
+✅ Structure of an Endpoint
+HTTP METHOD + URL PATH
+
+Example:
+
+POST /api/user/login
+Part	Meaning
+POST	Action (sending data)
+/api/user/login	API route path
+
+Together = One Endpoint
+
+
+2) What is next()?
+
+next is a function in Express used to pass control to the next middleware.
+
+✅ Why We Need It?
+
+Express runs middleware in order.
+
+If you don’t call next() or send a response →
+⚠️ Request will hang.
+
+next() is a function that passes control to the next middleware. If called with an error like next(err), it triggers the global error handler.
+
+
+
+3) Why do you write mongoose.models.user || mongoose.model(...)?
+
+Mongoose throws an OverwriteModelError if we try to define the same model multiple times. So we first check if the model already exists inside mongoose.models. If it exists, we reuse it. Otherwise, we create it. This prevents duplicate model compilation errors during development or hot reload.
+

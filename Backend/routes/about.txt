@@ -1,0 +1,71 @@
+4. Interview Questions About userRoute.js
+
+Q1: Why Separate Router Instead of app.get()?
+"Why create userRouter instead of using app.get() directly in server.js?"
+
+Correct answer:
+
+Modularity: Keep related routes together
+Maintainability: Easy to find user routes
+Prefix reuse: /api/user applied once in server.js
+Separation of concerns: Routes file doesn't care about server setup
+Testing: Can test router independently
+
+
+Q3: GET vs POST - Why POST for update-profile?
+"Why POST for update-profile instead of PUT or PATCH?"
+
+Technical answer:
+
+PUT: Replace entire resource
+PATCH: Update partial fields
+POST: General "send data" (flexible)
+Your code uses POST:
+
+Not RESTful purist approach
+Works, but PATCH is more semantic
+Industry standard:
+POST /users → Create user
+PATCH /users/:id → Update user
+
+
+
+3. Interview Questions About doctorRoute.js
+
+
+Q1: Why Is /list Public?
+"doctorList has no authDoctor. Why is it public?"
+
+Answer:
+
+Users need to browse doctors BEFORE logging in
+Booking flow: Browse doctors → Select → Login → Book
+Can't require login to see doctor list (bad UX)
+Frontend home page shows doctors to everyone
+
+
+Q4: Profile vs Update-Profile
+"Why separate /profile (GET) and /update-profile (POST)?"
+
+Answer:
+
+GET /profile: Fetch current data (read-only)
+POST /update-profile: Modify data (write)
+RESTful pattern:
+GET = Read
+POST/PATCH/PUT = Update
+
+
+
+WHAT YOU SHOULD SAY IN INTERVIEW (1-2 Minutes)
+"I have three route files, each handling a different user role.
+
+userRoute defines all patient endpoints - registration, login, profile management, and appointment workflows. Public routes like register and login don't require authentication, while protected routes like book-appointment use the authUser middleware.
+
+adminRoute handles the admin panel - adding doctors, viewing all appointments, managing doctor availability, and dashboard analytics. All routes except login require authAdmin middleware. Interestingly, I import changeAvailability from doctorController to reuse code since both admin and doctor can toggle availability.
+
+doctorRoute manages the doctor dashboard - viewing appointments, updating profile with image upload, marking appointments complete, and toggling availability. The /list endpoint is intentionally public so users can browse doctors before logging in.
+
+Each route file uses Express Router for modularity and is mounted with a prefix in server.js - /api/user, /api/admin, and /api/doctor respectively.
+
+If asked about weaknesses: 'The routes lack input validation middleware and rate limiting. I'm also using POST for everything instead of following REST conventions with PATCH and PUT. The doctor list endpoint should have pagination since it could return thousands of doctors.'"

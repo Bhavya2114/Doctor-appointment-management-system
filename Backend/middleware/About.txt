@@ -1,0 +1,109 @@
+1. File Purpose in Architecture
+Responsibility: Verify that request is from authenticated user (patient)
+Used on: User-only routes (book appointment, view profile, cancel, etc.)
+Prevents: Unauthenticated users from accessing protected endpoints
+Pattern: JWT token verification
+
+
+Interview Questions About UserAdmin.js
+
+Q1: What Is JWT? Explain How It Works
+"You're using JWT. Explain what it is and how verification works."
+
+Expected answer:
+
+JWT = 3 parts: header.payload.signature
+Header: Algorithm (HS256)
+Payload: User data (id, email, etc.)
+Signature: HMAC(header + payload, SECRET)
+Verification:
+
+Backend receives token: xxx.yyy.zzz
+Splits into header, payload, signature
+Recreates signature using SECRET
+Compares: if match → valid, else → tampered
+Why secure: Only server knows SECRET, so client can't fake signature
+
+
+Q2: Why JWT Instead of Sessions?
+"Why use JWT tokens instead of session cookies?"
+
+
+JWT	Sessions
+Stateless (no DB lookup)	
+Scalable (no session store)	
+Good for APIs
+Token in header	
+Can expire	
+
+
+Sessions->
+Stateful (DB/Redis lookup)
+Needs session store
+Good for APIs	Good for server-rendered apps
+Cookie in browser
+Can invalidate server-side
+
+
+Q4: Security: Can User Modify Token?
+"What if user edits the token to change their userId?"
+
+Answer:
+
+Token is signed with SECRET
+If user changes payload, signature won't match
+jwt.verify() will throw error
+Cannot fake identity without knowing SECRET
+
+
+3. Interview Questions About authAdmin.js
+
+Q1: Why Different Auth for Admin?
+"You have authUser and authAdmin. Why not use same middleware?"
+
+Answer:
+
+User: Stored in database (many users)
+Admin: Hardcoded in .env (single admin)
+Different verification logic needed
+Admin doesn't need DB lookup (faster)
+
+
+3. Interview Questions About authDoctor.js
+
+Q1: Why Separate Middleware for Doctors?
+"Why not use authUser for both users and doctors?"
+
+Answer:
+
+Different header names (dtoken vs token)
+Keeps concerns separated
+Doctors and Users are different entities
+Could merge with role-based checking
+
+
+
+5. Interview Questions About multer.js
+
+Q1: What Is multipart/form-data?
+"Why do you need multer? What's multipart/form-data?"
+
+Answer:
+
+Regular POST requests use application/json
+File uploads use multipart/form-data (binary data)
+Express doesn't parse multipart by default
+Multer is specialized middleware for it
+
+
+
+WHAT YOU SHOULD SAY IN INTERVIEW (1-2 Minutes)
+"I have four middleware files handling authentication and file uploads.
+
+authUser, authAdmin, and authDoctor implement JWT-based authentication for three different user roles. Each extracts a token from request headers, verifies it using jwt.verify() with our secret key, and injects the user ID into the request object for the controller to use.
+
+The key difference is authAdmin checks against hardcoded environment credentials instead of database lookup, which is simpler but limits us to a single admin.
+
+multer.js handles file uploads for images. It configures multer with disk storage to temporarily save uploaded files, which are then uploaded to Cloudinary and deleted.
+
+If asked about weaknesses: 'The admin auth puts credentials in the JWT payload which isn't ideal. Multer has no file type validation so users could upload malicious files. And I should move from req.body.userId to req.userId consistently across all auth middleware.'"

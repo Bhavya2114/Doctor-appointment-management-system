@@ -1,0 +1,11 @@
+
+1-2 Minute Explanation:
+"I have three core models: User for patients, Doctor for healthcare providers, and Appointment to link them.
+
+User stores name, email, password, address, phone. I use unique constraint on email to prevent duplicates.
+
+Doctor stores credentials, speciality, experience, fees, and two critical fields: workingHours (when they're available) and slots_booked which is an object mapping dates to booked time arrays. So slots_booked["20-02-2026"] contains all times booked that day.
+
+Appointment captures userId, docId, slotDate/slotTime, and importantly, userData and docData which are snapshots of user and doctor state at booking time. I also track payment status and cancellation.
+
+The schema design allows flexible booking: Doctor sets availability hours, frontend generates 30-minute slots, and booked times are filtered out."
